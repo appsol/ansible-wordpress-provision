@@ -1,0 +1,34 @@
+---
+
+- name: Install MySQL Server
+  apt: 
+        name={{ item }}
+        state=installed
+  with_items:
+        - mysql-server
+        - mysql-client
+        - python-mysqldb
+
+- name: Create Admin user
+  mysql_user:
+        name={{ mysql_adminuser }}
+        password={{ mysql_adminpass }}
+        priv=*.*:ALL
+        state=present
+
+- name: Create Wordpress database
+  mysql_db:
+        name={{ item.db_name }}
+        state=present
+  with_items:
+        hosts
+
+- name: Create WordPress database user
+  mysql_user:
+        name={{ item.db_user }}
+        password={{ item.db_password }}
+        priv={{ item.db_name }}.*:ALL
+        host='{{ item.db_host }}'
+        state=present
+  with_items:
+        hosts

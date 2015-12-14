@@ -1,0 +1,4 @@
+---
+# sudo_users:
+#   - name: stuart
+#     ssh_key: "{{ lookup('file', 'provisioners/roles/common/files/stuart_key.pub') }}"

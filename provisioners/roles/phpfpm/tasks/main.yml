@@ -1,0 +1,27 @@
+---
+
+- name: Install PHP-FPM
+  apt:
+        pkg={{ item }}
+        state=installed
+  with_items:
+        - php5-fpm
+        - php5
+        - libapache2-mod-php5
+        - php5-mysql
+        - php5-curl
+        - php5-gd
+        - php5-mcrypt
+        - php5-json
+        - php5-memcached
+  register: phpinstalled
+  notify:
+  - Start PHPFPM
+
+- name: Create phpinfo
+  copy:
+        src=index.php
+        dest="{{ phpfpm_document_root }}/html/"
+        owner=www-data
+        group=www-data
+  register: createphpinfo

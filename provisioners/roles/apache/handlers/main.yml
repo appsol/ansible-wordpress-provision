@@ -1,0 +1,12 @@
+---
+
+- name: Start Apache
+  service:
+        name=apache2
+        state=started
+        enabled=yes
+
+- name: Reload Apache
+  service:
+        name=apache2
+        state=restarted

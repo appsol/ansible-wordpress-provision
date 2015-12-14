@@ -1,0 +1,29 @@
+---
+
+- name: Install Apache2 Server
+  apt: name=apache2 update_cache=yes state=latest
+
+- name: enabled mod_rewrite
+  apache2_module: name=rewrite state=present
+  notify:
+    - Reload Apache
+
+- name: Http service state
+  service: 
+        name=apache2
+        state=started
+        enabled=yes
+
+- name: create virtual host file
+  template: src=vhosts.conf.j2 dest=/etc/apache2/sites-available/{{ item.hostname }}.conf
+  with_items:
+        hosts
+
+- name: a2ensite {{ item.hostname }}
+  command: a2ensite {{ item.hostname }}
+  args:
+    creates: /etc/apache2/sites-enabled/{{ item.hostname }}.conf
+  with_items:
+        hosts
+  notify:
+    - Reload Apache

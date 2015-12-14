@@ -1,0 +1,46 @@
+---
+
+# - name: Create Users
+#   user: 
+#         name={{ item.name }} state=present shell=/bin/bash group=sudo append=yes
+#   with_items: sudo_users
+
+# - name: Deploy SSH-Keys
+#   authorized_key:
+#         user={{ item.name}}
+#         key="{{ item.ssh_key }}"
+#   with_items: sudo_users
+
+# - name: Modify Sudo File
+#   lineinfile: 
+#         dest=/etc/sudoers
+#         regexp="^%sudo"
+#         line='%sudo   ALL=(ALL:ALL) NOPASSWD:ALL'
+#         validate='visudo -cf %s'
+
+- name: Disable Password Authentication
+  lineinfile: 
+        dest=/etc/ssh/sshd_config
+        regexp="^#PasswordAuthentication yes$"
+        line="PasswordAuthentication no"
+        state=present
+        backrefs=yes
+
+- name: Disable Root Login
+  lineinfile:
+        dest=/etc/ssh/sshd_config
+        regexp="^PermitRootLogin"
+        line="PermitRootLogin no"
+        state=present
+        backrefs=yes
+  notify:
+        - Restart SSH
+
+- name: Create Host Directories
+  file:
+        path="/var/www/vhosts/{{ item.hostname }}/public_html/"
+        state=directory
+        mode=0755
+        force=no
+  with_items:
+        hosts

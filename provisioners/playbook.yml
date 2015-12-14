@@ -1,0 +1,36 @@
+---
+
+- name: Install Common Attributes
+  hosts: all
+  remote_user: vagrant
+  sudo: yes
+  roles:
+        - common
+
+- name: Install And Configure Apache
+  hosts: apache
+  remote_user: vagrant
+  sudo: yes
+  roles:
+        - apache
+
+- name: Install And Configure MySQL
+  hosts: mysql
+  remote_user: vagrant
+  sudo: yes
+  roles:
+        - mysql
+
+- name: Install PHP-FPM And Deploy The PHP Code
+  hosts: phpfpm
+  remote_user: vagrant
+  sudo: yes
+  roles:
+        - phpfpm
+
+- name: Install and configure Wordpress
+  hosts: wordpress
+  remote_user: vagrant
+  sudo: yes
+  roles:
+        - wordpress

@@ -1,0 +1,15 @@
+
+<VirtualHost *:{{http_port}}>
+    ServerName {{ item.hostname }}
+    ServerAlias www.{{ item.hostname }}
+    DocumentRoot /var/www/vhosts/{{ item.hostname }}/public_html
+    ServerAdmin webmaster@{{ item.hostname }}
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+    <Directory "/var/www/vhosts/{{ item.hostname }}/public_html">
+        AllowOverride All
+        Options -Indexes +FollowSymLinks
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>
